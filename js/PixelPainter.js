@@ -13,9 +13,6 @@ let pixelPainter = (function(){
   let drawBoxShapeStart;
   let drawBoxShapeEnd;
 
-  
-  
-
   const colorSwatch = (function (){
     const colorSwatchDiv = document.createElement("div");
     pixelPainterDiv.appendChild(colorSwatchDiv);
@@ -35,7 +32,6 @@ let pixelPainter = (function(){
       color.className = 'color-choice';
       if (i < myColors.length){
         color.style.background = myColors[i];
-        console.log('reached');
         continue;
       }
       let rValue = Math.floor(Math.random() * 255);
@@ -52,7 +48,7 @@ let pixelPainter = (function(){
       const button = document.createElement("button");
       buttonSelection.appendChild(button);
       button.addEventListener('click', function(){
-        const canvasCells = document.getElementsByClassName('canvas-cell');
+        const canvasCells = document.getElementsByClassName('grid-cell');
         for (let i = 0; i < canvasCells.length; i++){
           canvasCells[i].style.background = 'transparent';
         }
@@ -71,83 +67,75 @@ let pixelPainter = (function(){
       button.innerHTML = "Erase";
     })();
     
-    const drawBoxModule = (function(){
-      const moduleButton = document.createElement('button');
-      moduleButton.className = 'swatch-button';
-      moduleButton.textContent = 'Draw Box';
-      buttonSelection.appendChild(moduleButton);
-      
-      moduleButton.addEventListener('click', function(){
+    const drawBox = (function(){
+      const button = document.createElement('button');
+      buttonSelection.appendChild(button);
+      button.addEventListener('click', function(){
         drawBoxShape = !drawBoxShape;
-        console.log(drawBoxShape);
       });
+      button.className = 'swatch-button';
+      button.innerHTML = "Draw Box";
     })();
   })();
 
   
   
-  const canvas = function(){
+  const canvas = (function(){
     const canvasDiv = document.createElement("div");
     pixelPainterDiv.appendChild(canvasDiv);
     canvasDiv.id = "canvas-container";
     canvasDiv.onmouseenter = function(){
       mouseButtonIsDown = false;
-    }
-    const canvas = document.createElement("table");
-    canvas.id = 'canvas';
-    canvasDiv.appendChild(canvas);
-    for (let rowCount = 0; rowCount < height; rowCount++){
-      let rowElement = document.createElement("tr");
-      canvas.appendChild(rowElement);
-      for (let cellCount = 0; cellCount < width; cellCount++){
-        let cellElement = document.createElement("td");
-        cellElement.className = 'canvas-cell';
-        rowElement.appendChild(cellElement);
-        cellElement.ondragstart = function(){
-          return false;
-        }
-        cellElement.ondrop = function(){
-          return false;
-        }
-        cellElement.onmousedown = function(){
-          mouseButtonIsDown = true;
-          if (drawBoxShape && drawBoxShapeStep === 1){
-            drawBoxShapeStart = this;
-          }
-          if (drawBoxShape && drawBoxShapeStep === 2){
-            drawBoxShapeEnd = this;
-            for (let i = drawBoxShapeStart.cellIndex; i < drawBoxShapeEnd.cellIndex; i++){
-              canvas.rows[drawBoxShapeEnd.parentElement.rowIndex].cells[i].style.background = selectedColor;
-              canvas.rows[drawBoxShapeStart.parentElement.rowIndex].cells[i].style.background = selectedColor;  
+    };
+
+    const grid = (function(){
+      const table = document.createElement("table");
+      canvasDiv.appendChild(table);
+      table.id = 'grid';
+
+      for (let ir = 0; ir < height; ir++){
+        let row = document.createElement("tr");
+        table.appendChild(row);
+        for (let ic = 0; ic < width; ic++){
+          let cell = document.createElement("td");
+          row.appendChild(cell);
+          cell.className = 'grid-cell';
+          cell.ondragstart = function(){return false;};
+          cell.ondrop = function(){return false;};
+          cell.onmousedown = function(){
+            mouseButtonIsDown = true;
+            if (drawBoxShape && drawBoxShapeStep === 1){
+              drawBoxShapeStart = this;
             }
-            for (let i = drawBoxShapeStart.parentElement.rowIndex; i < drawBoxShapeEnd.parentElement.rowIndex; i++){
-              canvas.rows[i].cells[drawBoxShapeStart.cellIndex].style.background = selectedColor;
-              canvas.rows[i].cells[drawBoxShapeEnd.cellIndex].style.background = selectedColor;
+            if (drawBoxShape && drawBoxShapeStep === 2){
+              drawBoxShapeEnd = this;
+              for (let i = drawBoxShapeStart.cellIndex; i < drawBoxShapeEnd.cellIndex; i++){
+                table.rows[drawBoxShapeEnd.parentElement.rowIndex].cells[i].style.background = selectedColor;
+                table.rows[drawBoxShapeStart.parentElement.rowIndex].cells[i].style.background = selectedColor;  
+              }
+              for (let i = drawBoxShapeStart.parentElement.rowIndex; i < drawBoxShapeEnd.parentElement.rowIndex; i++){
+                table.rows[i].cells[drawBoxShapeStart.cellIndex].style.background = selectedColor;
+                table.rows[i].cells[drawBoxShapeEnd.cellIndex].style.background = selectedColor;
+              }
             }
-          }
-          this.style.background = selectedColor;
-        }
-        cellElement.onmouseenter = function(){
-          if (mouseButtonIsDown === true){
             this.style.background = selectedColor;
           }
-        }
-        cellElement.onmouseup = function(){
-          mouseButtonIsDown = false;
-          if (drawBoxShape){
-            drawBoxShapeStep++;
+          cell.onmouseenter = function(){
+            if (mouseButtonIsDown){
+              this.style.background = selectedColor;
+            }
           }
-          if (drawBoxShapeStep > 2){
-            drawBoxShapeStep = 1;
+          cell.onmouseup = function(){
+            mouseButtonIsDown = false;
+            if (drawBoxShape){
+              drawBoxShapeStep++;
+            }
+            if (drawBoxShapeStep > 2){
+              drawBoxShapeStep = 1;
+            }
           }
         }
       }
-    }
-  }();
-
-  return {
-    width,
-    height,
-  }
+    })();
+  })();
 })();
-

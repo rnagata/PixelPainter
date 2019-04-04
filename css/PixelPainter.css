@@ -58,7 +58,7 @@ h1{
   border-bottom: 1px solid black;
 }
 
-#canvas{
+#grid{
   border-collapse: collapse;
   table-layout: fixed;
   white-space: nowrap;
@@ -69,7 +69,7 @@ h1{
   
 }
 
-.canvas-cell{
+.grid-cell{
   border: 1px solid black;
   border-spacing: 0px;
   padding: 0px;
