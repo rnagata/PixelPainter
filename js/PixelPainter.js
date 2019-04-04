@@ -61,13 +61,15 @@ let pixelPainter = (function(){
       button.innerHTML = "Clear";
     })();
     
-    const erase = document.createElement("button");
-    buttonSelection.appendChild(erase);
-    erase.addEventListener('click', function(){
-      selectedColor = 'transparent';
-    });
-    erase.className = "swatch-button";
-    erase.innerHTML = "Erase";
+    const erase = (function(){
+      const button = document.createElement("button");
+      buttonSelection.appendChild(button);
+      button.addEventListener('click', function(){
+        selectedColor = 'transparent';
+      });
+      button.className = "swatch-button";
+      button.innerHTML = "Erase";
+    })();
     
     const drawBoxModule = (function(){
       const moduleButton = document.createElement('button');
