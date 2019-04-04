@@ -78,8 +78,6 @@ let pixelPainter = (function(){
     })();
   })();
 
-  
-  
   const canvas = (function(){
     const canvasDiv = document.createElement("div");
     pixelPainterDiv.appendChild(canvasDiv);
