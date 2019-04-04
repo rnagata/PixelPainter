@@ -41,23 +41,25 @@ let pixelPainter = (function(){
       let rValue = Math.floor(Math.random() * 255);
       let gValue = Math.floor(Math.random() * 255);
       let bValue = Math.floor(Math.random() * 255);
-      color.style.background = 'rgb(' + rValue.toString() + ', ' + gValue.toString() + ' ,' + bValue.toString() + ')';
+      color.style.background = 'rgb(' + rValue + ', ' + gValue + ' ,' + bValue + ')';
     }
     
     const buttonSelection = document.createElement("div");
     colorSwatchDiv.appendChild(buttonSelection);
     buttonSelection.id = "swatch-buttons";
     
-    const clear = document.createElement("button");
-    buttonSelection.appendChild(clear);
-    clear.addEventListener('click', function(){
-      const allCanvasCells = document.getElementsByClassName('canvas-cell');
-      for (let currentCanvasCell = 0; currentCanvasCell < allCanvasCells.length; currentCanvasCell++){
-        allCanvasCells[currentCanvasCell].style.background = 'transparent';
-      }
-    });
-    clear.className = "swatch-button";
-    clear.innerHTML = "Clear";
+    const clear = (function(){
+      const button = document.createElement("button");
+      buttonSelection.appendChild(button);
+      button.addEventListener('click', function(){
+        const canvasCells = document.getElementsByClassName('canvas-cell');
+        for (let i = 0; i < canvasCells.length; i++){
+          canvasCells[i].style.background = 'transparent';
+        }
+      });
+      button.className = "swatch-button";
+      button.innerHTML = "Clear";
+    })();
     
     const erase = document.createElement("button");
     buttonSelection.appendChild(erase);
